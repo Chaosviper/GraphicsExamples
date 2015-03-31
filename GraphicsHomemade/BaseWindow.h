@@ -18,7 +18,6 @@ namespace directXHelper{
 		FLOAT clearColor[4];
 
 
-
 		// ** PRIVATE FUNCTIONS
 		int InitWindow(HINSTANCE hInstance, int cmdShow);
 		int InitDirectX();
@@ -41,6 +40,28 @@ namespace directXHelper{
 
 		virtual int implementedRender();
 		virtual int LoadResources();
+
+
+
+
+
+		// ---> *** Stuff for keypressing *** <---
+
+	public:
+		enum KeyAvailable{
+			UP = 0,
+			DOWN,
+			LEFT,
+			RIGHT,
+			KEY_COUNT
+		};
+
+		static void UpdateKey(KeyAvailable key, bool state); // Delegate for callbackfunction
+	protected:
+		static bool KeyPressed[KEY_COUNT];
+
+		// ---> *** END (Stuff for keypressing) *** <---
+
 	public:
 		BaseWindow();
 
@@ -61,6 +82,9 @@ namespace directXHelper{
 		}
 	}
 
+
+	
 	LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+	int AnalyzeEventCallback(UINT message, WPARAM wParam, LPARAM lParam);
 
 }

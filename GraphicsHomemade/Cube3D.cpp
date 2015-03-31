@@ -112,12 +112,12 @@ int Cube3D::LoadResources(){
 	}
 
 
-	//  ***************** Calcolo matrici di trasformazione
+	//  ***************** Calcolo matrici di trasformazione (world fatta ad ogni render)
 	XMVECTOR vectorUP = { 0.0f, 1.0f, 0.0f, 0.0f };
 	XMVECTOR focusPoint = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 
-	XMMATRIX worldMatrix = XMMatrixTranslation(0.0f, 0.0f, 5.0f);
+	XMMATRIX worldCoord = XMMatrixTranslation(0.0f, 0.0f, 5.0f);
 	// LH => left hand
 	XMMATRIX viewMatrix = XMMatrixLookAtLH(CameraPos, focusPoint, vectorUP);
 	XMMATRIX porjectionMatrix = XMMatrixPerspectiveFovLH(11.35f, 1.3f, 1.0f, 10);
@@ -135,7 +135,7 @@ int Cube3D::LoadResources(){
 	D3D11_SUBRESOURCE_DATA resDataWorldMatrix;
 	ZeroMemory(&resDataWorldMatrix, sizeof(D3D11_SUBRESOURCE_DATA));
 
-	resDataWorldMatrix.pSysMem = &worldMatrix;
+	resDataWorldMatrix.pSysMem = &worldCoord;
 
 	res = g_d3dDevice->CreateBuffer(&constTransfMatrixBufferDesc, &resDataWorldMatrix, &D11_wordMatrix);
 	if (FAILED(res)){
@@ -235,6 +235,21 @@ int Cube3D::implementedRender(){
 	g_d3dDeviceContext->IASetVertexBuffers(0, 1, &D11_vertexBuffer, &vertexStride, &offset);
 	g_d3dDeviceContext->IASetIndexBuffer(D11_indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 	g_d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// ** world matrix updating
+	if (KeyPressed[RIGHT])
+		angleCoord += 0.0005f;
+	else if (KeyPressed[LEFT])
+		angleCoord -= 0.0005f;
+
+	XMMATRIX worldUpdatedCoord = XMMatrixMultiply(XMMatrixRotationY(angleCoord), XMMatrixTranslation(0.0f, 0.0f, 5.0f));
+	g_d3dDeviceContext->UpdateSubresource(D11_wordMatrix, 0, nullptr, &worldUpdatedCoord, 0, 0);
+
+	// ** View matrix updating
+	const XMVECTOR vectorUP = { 0.0f, 1.0f, 0.0f, 0.0f };
+	const XMVECTOR focusPoint = { 0.0f, 0.0f, 1.0f, 1.0f };
+	XMMATRIX viewMatrix = XMMatrixLookAtLH(CameraPos, focusPoint, vectorUP);
+	g_d3dDeviceContext->UpdateSubresource(D11_viewMatrix, 0, nullptr, &viewMatrix, 0, 0);
 
 	// ** Vertex shader stage
 	g_d3dDeviceContext->VSSetShader(D11_vertexShader, nullptr, 0);

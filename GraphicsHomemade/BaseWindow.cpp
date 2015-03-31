@@ -1,5 +1,6 @@
 #include "BaseWindow.h"
 #include <assert.h>
+#include <iostream>
 
 
 namespace directXHelper{
@@ -301,7 +302,6 @@ namespace directXHelper{
 		g_d3dDeviceContext->ClearDepthStencilView(mPDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, clearDepth, clearStencil);
 	}
 
-
 	BaseWindow::~BaseWindow()
 	{
 		SafeRelease(g_d3dDevice);
@@ -316,6 +316,24 @@ namespace directXHelper{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+	bool BaseWindow::KeyPressed[] = { false, false, false, false };
+
+	void BaseWindow::UpdateKey(KeyAvailable key, bool state){
+		KeyPressed[key] = state;
+	}
+
+	void (*CallbackInputMemberFunction)(BaseWindow::KeyAvailable, bool) = &BaseWindow::UpdateKey;
 
 	LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
@@ -336,10 +354,72 @@ namespace directXHelper{
 		}
 		break;
 		default:
-			return DefWindowProc(hwnd, message, wParam, lParam);
+			if (AnalyzeEventCallback(message, wParam, lParam) != 0){
+				// Per tutti gli altri eventi, lascia a Windows gestire le chiamate
+				return DefWindowProc(hwnd, message, wParam, lParam);
+			}
 		}
 
 		return 0;
 	}
 
+	int AnalyzeEventCallback(UINT message, WPARAM wParam, LPARAM lParam){
+		switch (message)
+		{
+			// KEYBOARD
+			case WM_KEYDOWN: 
+				switch (wParam){
+				case 0x41: 
+					CallbackInputMemberFunction(BaseWindow::LEFT, true);
+					break; // A
+				case 0x44:
+					CallbackInputMemberFunction(BaseWindow::RIGHT, true);
+					break; // D
+				case 0x57:
+					CallbackInputMemberFunction(BaseWindow::UP, true);
+					break; // W
+				case 0x53:
+					CallbackInputMemberFunction(BaseWindow::DOWN, true);
+					break; // S
+				default:
+					return 1;
+				}
+				break;
+			case WM_KEYUP:
+				switch (wParam){
+					case 0x41:
+						CallbackInputMemberFunction(BaseWindow::LEFT, false);
+						break; // A
+					case 0x44:
+						CallbackInputMemberFunction(BaseWindow::RIGHT, false);
+						break; // D
+					case 0x57:
+						CallbackInputMemberFunction(BaseWindow::UP, false);
+						break; // W
+					case 0x53:
+						CallbackInputMemberFunction(BaseWindow::DOWN, false);
+						break; // S
+					default:
+						return 1;
+				}
+				break;
+
+			// MOUSE BUTTONS
+			/*case WM_RBUTTONDOWN:
+			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN: window->mouseKeyPressed(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), wParam); break;
+
+			case WM_LBUTTONUP:
+			case WM_RBUTTONUP:
+			case WM_MBUTTONUP: window->mouseKeyReleased(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), wParam); break;*/
+
+			// MOUSE MOVE
+			//MOUSEMOVE: window->mouseKeyMoved(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), wParam); break;
+
+		default: 
+			return 1;
+		}
+
+		return 0;
+	}
 }

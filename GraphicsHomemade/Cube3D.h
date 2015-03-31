@@ -9,6 +9,7 @@ class Cube3D: public directXHelper::BaseWindow
 		DirectX::XMFLOAT4 color;
 	};
 	DirectX::XMVECTOR CameraPos;
+	float angleCoord;
 
 	CoordAndColor cubeVertex[8];
 	WORD indices[36];
