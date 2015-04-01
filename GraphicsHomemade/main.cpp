@@ -1,9 +1,9 @@
-#include "Cube3D.h"
+#include "ZbufferCubes.h"
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int cmdShow)
 {
-	Cube3D app;
+	ZbufferCubes app;
 
 	app.InitAll(hInstance, cmdShow);
 

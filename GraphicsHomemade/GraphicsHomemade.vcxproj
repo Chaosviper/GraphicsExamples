@@ -71,12 +71,14 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Cube3D.h" />
     <ClInclude Include="SimpleSquare.h" />
+    <ClInclude Include="ZbufferCubes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseWindow.cpp" />
     <ClCompile Include="Cube3D.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SimpleSquare.cpp" />
+    <ClCompile Include="ZbufferCubes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="3DPixelShader.hlsl">
@@ -101,6 +103,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">mainVertexShader</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">mainVertexShader</EntryPointName>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="SimplePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>

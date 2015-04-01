@@ -22,6 +22,9 @@
     <Filter Include="Shaders\Cube3D">
       <UniqueIdentifier>{e2af7109-0a9d-4ce6-9ef2-c31394799c0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\ZbufferCubes">
+      <UniqueIdentifier>{4d20c6f5-c1a7-4cd0-9c16-296b0885d8ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -31,6 +34,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Cube3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZbufferCubes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,6 +53,9 @@
     <ClCompile Include="Cube3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ZbufferCubes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="myPixelShader.hlsl">
@@ -60,6 +69,9 @@
     </FxCompile>
     <FxCompile Include="3DPixelShader.hlsl">
       <Filter>Shaders\Cube3D</Filter>
+    </FxCompile>
+    <FxCompile Include="SimplePixelShader.hlsl">
+      <Filter>Shaders\ZbufferCubes</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
