@@ -10,7 +10,8 @@ class ZbufferCubes: public directXHelper::BaseWindow
 	};
 	DirectX::XMVECTOR CameraPos;
 	float cubeAngleCoord;
-	float cameraAngle;
+	float cameraAngleX;
+	float cameraAngleY;
 
 	CoordAndColor cubeVertex[8];
 	WORD indices[36];

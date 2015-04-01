@@ -267,16 +267,31 @@ int ZbufferCubes::implementedRender(){
 
 	// ** camera world matrix updating
 	if (KeyPressed[RIGHT]){
-		cameraAngle = 0.001f;
+		cameraAngleY = 0.001f;
 	}
 	else if (KeyPressed[LEFT]){
-		cameraAngle = -0.001f;
+		cameraAngleY = -0.001f;
 	}
 	else{
-		cameraAngle = 0.0f;
+		cameraAngleY = 0.0f;
 	}
 
-	XMMATRIX res = XMMatrixMultiply(XMMatrixRotationY(cameraAngle), XMMatrixTranslation(0.0f, 0.0f, 5.0f));
+	if (KeyPressed[UP]){
+		// controllo che la Z sia al di qua del cubo, altrimenti il sistema di riferimento e' invertito! y positivo = y negativo! 
+		//		nel caso sia al di la, li inverto!
+		// Situazione:
+		//		Camera |---- (-3.5) ----> (0,0,0) |---- [5] ----> Primo cubo                         <<<ASSE Z!>>>
+		cameraAngleX = (CameraPos.m128_f32[2] >= 5) ? 0.001f : -0.001;
+	}
+	else if (KeyPressed[DOWN]){
+		cameraAngleX = (CameraPos.m128_f32[2] >= 5) ? -0.001f : 0.001;
+	}
+	else{
+		cameraAngleX = 0.0f;
+	}
+
+	XMMATRIX res = XMMatrixMultiply(XMMatrixRotationX(cameraAngleX), XMMatrixRotationY(cameraAngleY));
+	res = XMMatrixMultiply(res, XMMatrixTranslation(0.0f, 0.0f, 5.0f));
 	res = XMMatrixMultiply(XMMatrixTranslation(0.0f, 0.0f, -5.0f), res);
 	CameraPos = XMVector4Transform(CameraPos, res);
 
