@@ -192,6 +192,27 @@ int Lighting::LoadResources(){
 		return -1;
 	}
 
+	XMVECTOR directionalLightPosition = { 0.0f, 2.5f, 0.0f, 1.0f };
+
+	// ** BUFFER AGGIUNTIVO PER LIGHT INFO
+	D3D11_BUFFER_DESC constLightBufferDesc;
+	ZeroMemory(&constLightBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	constLightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constLightBufferDesc.ByteWidth = sizeof(XMVECTOR);
+	constLightBufferDesc.CPUAccessFlags = 0;
+	constLightBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	D3D11_SUBRESOURCE_DATA resDataLightVector;
+	ZeroMemory(&resDataLightVector, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	resDataLightVector.pSysMem = &directionalLightPosition;
+
+	res = g_d3dDevice->CreateBuffer(&constLightBufferDesc, &resDataLightVector, &D11_lightPos);
+	if (FAILED(res)){
+		return -1;
+	}
+
 
 	// ** LOAD PRECOMPILED VERTEX SHADER
 
@@ -233,9 +254,9 @@ int Lighting::LoadResources(){
 	ID3DBlob* pixelShaderBlob;
 
 #if _DEBUG
-	LPCWSTR compiledPixelShaderObject2 = L"SimplePixelShader_d.cso";
+	LPCWSTR compiledPixelShaderObject2 = L"SimpleDiffusePShader_d.cso";
 #else
-	LPCWSTR compiledPixelShaderObject2 = L"SimplePixelShader.cso";
+	LPCWSTR compiledPixelShaderObject2 = L"SimpleDiffusePShader.cso";
 #endif
 
 	res = D3DReadFileToBlob(compiledPixelShaderObject2, &pixelShaderBlob);
@@ -313,8 +334,9 @@ int Lighting::implementedRender(){
 
 	// ** Vertex shader stage
 	g_d3dDeviceContext->VSSetShader(D11_vertexShader, nullptr, 0);
-	// Setto i buffer costante nel VS (lo avrei potuto fare anche in dichiarazione, tanto, nel nostro caso, sono SEMPRE SEMPRE costanti (non solo nella DrawCall)
+	// Setto i buffer costante nel VS contentente le info sulla pos e quelle per la pos della luce
 	g_d3dDeviceContext->VSSetConstantBuffers(0, 1, &D11_transformInfo);
+	g_d3dDeviceContext->VSSetConstantBuffers(1, 1, &D11_lightPos);
 	// --- eventuali buffer costanti da settare ---
 
 	// ** Pixel shader stage

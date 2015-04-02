@@ -32,6 +32,7 @@ class Lighting : public directXHelper::BaseWindow
 	ID3D11Buffer* D11_indexBuffer;
 
 	ID3D11Buffer* D11_transformInfo;
+	ID3D11Buffer* D11_lightPos;
 	/*ID3D11Buffer* D11_cameraPos;*/
 		
 	// SHADER
