@@ -25,6 +25,9 @@
     <Filter Include="Shaders\ZbufferCubes">
       <UniqueIdentifier>{4d20c6f5-c1a7-4cd0-9c16-296b0885d8ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Lighting">
+      <UniqueIdentifier>{7406b74e-dc89-409a-b3c9-603c3546c025}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -37,6 +40,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ZbufferCubes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,6 +62,9 @@
     <ClCompile Include="ZbufferCubes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="myPixelShader.hlsl">
@@ -72,6 +81,9 @@
     </FxCompile>
     <FxCompile Include="SimplePixelShader.hlsl">
       <Filter>Shaders\ZbufferCubes</Filter>
+    </FxCompile>
+    <FxCompile Include="SimpleDiffuseVShader.hlsl">
+      <Filter>Shaders\Lighting</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
