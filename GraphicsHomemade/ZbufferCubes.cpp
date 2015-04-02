@@ -120,7 +120,7 @@ int ZbufferCubes::LoadResources(){
 	XMMATRIX worldCoord = XMMatrixTranslation(0.0f, 0.0f, 5.0f);
 	// LH => left hand
 	XMMATRIX viewMatrix = XMMatrixLookAtLH(CameraPos, focusPoint, vectorUP);
-	XMMATRIX porjectionMatrix = XMMatrixPerspectiveFovLH(11.35f, 1.3f, 1.0f, 100);
+	XMMATRIX porjectionMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(40.0f), 1.3f, 1.0f, 100);
 	// ****************** END
 
 	// ** BUFFER AGGIUNTIVO PER WORLD MATRIX
@@ -267,10 +267,10 @@ int ZbufferCubes::implementedRender(){
 
 	// ** camera world matrix updating
 	if (KeyPressed[RIGHT]){
-		cameraAngleY = 0.001f;
+		cameraAngleY = -0.001f;
 	}
 	else if (KeyPressed[LEFT]){
-		cameraAngleY = -0.001f;
+		cameraAngleY = 0.001f;
 	}
 	else{
 		cameraAngleY = 0.0f;
@@ -281,10 +281,10 @@ int ZbufferCubes::implementedRender(){
 		//		nel caso sia al di la, li inverto!
 		// Situazione:
 		//		Camera |---- (-3.5) ----> (0,0,0) |---- [5] ----> Primo cubo                         <<<ASSE Z!>>>
-		cameraAngleX = (CameraPos.m128_f32[2] >= 5) ? 0.001f : -0.001;
+		cameraAngleX = (CameraPos.m128_f32[2] >= 5) ? -0.001f : 0.001;
 	}
 	else if (KeyPressed[DOWN]){
-		cameraAngleX = (CameraPos.m128_f32[2] >= 5) ? -0.001f : 0.001;
+		cameraAngleX = (CameraPos.m128_f32[2] >= 5) ? 0.001f : -0.001;
 	}
 	else{
 		cameraAngleX = 0.0f;
