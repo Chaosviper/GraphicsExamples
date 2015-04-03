@@ -94,5 +94,17 @@
     <FxCompile Include="SimpleDiffusePShader_V2.hlsl">
       <Filter>Shaders\Lighting</Filter>
     </FxCompile>
+    <FxCompile Include="BlinnPhongVShader.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="BlinnPhongPShader.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="BlinnPhongVShader_V2.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="BlinnPhongPShader_V2.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -192,7 +192,7 @@ int Lighting::LoadResources(){
 		return -1;
 	}
 
-	XMVECTOR directionalLightPosition = { 0.0f, 3.0f, 0.0f, 1.0f };
+	XMVECTOR directionalLightPosition = { 0.0f, 4.0f, 0.0f, 1.0f };
 
 	// ** BUFFER AGGIUNTIVO PER LIGHT INFO
 	D3D11_BUFFER_DESC constLightBufferDesc;
@@ -214,15 +214,44 @@ int Lighting::LoadResources(){
 	}
 
 
+// ************** SE LO SHADER E' BLINNPHONG => AGGIUNGO ANCHE LA POSIZIONE DELLA CAMERA AI BUFFER DIRECTX **************
+#ifdef BLINNPHONG
+
+	D3D11_BUFFER_DESC constCameraposBufferDesc;
+	ZeroMemory(&constCameraposBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	constCameraposBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constCameraposBufferDesc.ByteWidth = sizeof(XMVECTOR);
+	constCameraposBufferDesc.CPUAccessFlags = 0;
+	constCameraposBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	D3D11_SUBRESOURCE_DATA resDataCameraPos;
+	ZeroMemory(&resDataCameraPos, sizeof(D3D11_SUBRESOURCE_DATA));
+
+	resDataCameraPos.pSysMem = &CameraPos;
+
+	res = g_d3dDevice->CreateBuffer(&constCameraposBufferDesc, &resDataCameraPos, &D11_cameraPos);
+	if (FAILED(res)){
+		return -1;
+	}
+#endif
+
 	// ** LOAD PRECOMPILED VERTEX SHADER
 
 	ID3DBlob* vertexShaderBlob;
-#if _DEBUG
-	LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader_d.cso";
+#ifndef BLINNPHONG
+	#if _DEBUG
+		LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader_d.cso";
+	#else
+		LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader.cso";
+	#endif
 #else
-	LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader.cso";
+	#if _DEBUG
+		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_d.cso";
+	#else
+		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_V2.cso";
+	#endif
 #endif
-
 	res = D3DReadFileToBlob(compiledVertexShaderObject, &vertexShaderBlob);
 	if (FAILED(res))
 	{
@@ -252,14 +281,20 @@ int Lighting::LoadResources(){
 
 	// ** LOAD PRECOMPILED PIXEL SHADER
 	ID3DBlob* pixelShaderBlob;
-
-#if _DEBUG
-	LPCWSTR compiledPixelShaderObject2 = L"SimpleDiffusePShader_d.cso";
+#ifndef BLINNPHONG
+	#if _DEBUG
+		LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader_d.cso";
+	#else
+		LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader.cso";
+	#endif
 #else
-	LPCWSTR compiledPixelShaderObject2 = L"SimpleDiffusePShader.cso";
+	#if _DEBUG
+	LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_d.cso";
+	#else
+	LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_V2.cso";
+	#endif
 #endif
-
-	res = D3DReadFileToBlob(compiledPixelShaderObject2, &pixelShaderBlob);
+	res = D3DReadFileToBlob(compiledPixelShaderObject, &pixelShaderBlob);
 	if (FAILED(res))
 	{
 		return -1;
@@ -289,7 +324,7 @@ int Lighting::implementedRender(){
 
 
 	// ** rotating cube world matrix updating
-	cubeAngleCoord += 0.0005f;
+	//cubeAngleCoord += 0.0005f;
 
 	transform.worldMatrix = XMMatrixMultiply(XMMatrixRotationY(cubeAngleCoord), XMMatrixTranslation(0.0f, 0.0f, 5.0f));
 
@@ -337,6 +372,11 @@ int Lighting::implementedRender(){
 	// Setto i buffer costante nel VS contentente le info sulla pos e quelle per la pos della luce
 	g_d3dDeviceContext->VSSetConstantBuffers(0, 1, &D11_transformInfo);
 	g_d3dDeviceContext->VSSetConstantBuffers(1, 1, &D11_lightPos);
+
+#ifdef BLINNPHONG
+	g_d3dDeviceContext->UpdateSubresource(D11_cameraPos, 0, nullptr, &CameraPos, 0, 0);
+	g_d3dDeviceContext->VSSetConstantBuffers(2, 1, &D11_cameraPos);
+#endif
 	// --- eventuali buffer costanti da settare ---
 
 	// ** Pixel shader stage

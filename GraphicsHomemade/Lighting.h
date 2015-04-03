@@ -2,6 +2,8 @@
 #include "BaseWindow.h"
 #include <DirectXMath.h>
 
+#define BLINNPHONG
+
 class Lighting : public directXHelper::BaseWindow
 {
 	struct CoordAndNormals{
@@ -33,6 +35,9 @@ class Lighting : public directXHelper::BaseWindow
 
 	ID3D11Buffer* D11_transformInfo;
 	ID3D11Buffer* D11_lightPos;
+#ifdef BLINNPHONG
+	ID3D11Buffer* D11_cameraPos;
+#endif
 	/*ID3D11Buffer* D11_cameraPos;*/
 		
 	// SHADER
