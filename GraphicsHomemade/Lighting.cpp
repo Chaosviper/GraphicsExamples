@@ -214,8 +214,8 @@ int Lighting::LoadResources(){
 	}
 
 
-// ************** SE LO SHADER E' BLINNPHONG => AGGIUNGO ANCHE LA POSIZIONE DELLA CAMERA AI BUFFER DIRECTX **************
-#ifdef BLINNPHONG
+// ************** SE LO SHADER E' BLINNPHONG o GOURAND => AGGIUNGO ANCHE LA POSIZIONE DELLA CAMERA AI BUFFER DIRECTX **************
+#if defined(BLINNPHONG) || defined(GOURAND)
 
 	D3D11_BUFFER_DESC constCameraposBufferDesc;
 	ZeroMemory(&constCameraposBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -240,16 +240,24 @@ int Lighting::LoadResources(){
 
 	ID3DBlob* vertexShaderBlob;
 #ifndef BLINNPHONG
-	#if _DEBUG
-		LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader_d.cso";
+	#ifdef GOURAND
+		#if _DEBUG
+		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_d.cso";
+		#else
+		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader.cso";
+		#endif
 	#else
+		#if _DEBUG
+		LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader_d.cso";
+		#else
 		LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader.cso";
+		#endif
 	#endif
 #else
 	#if _DEBUG
-		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_d.cso";
+	LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_V2_d.cso";
 	#else
-		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_V2.cso";
+	LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_V2.cso";
 	#endif
 #endif
 	res = D3DReadFileToBlob(compiledVertexShaderObject, &vertexShaderBlob);
@@ -282,18 +290,27 @@ int Lighting::LoadResources(){
 	// ** LOAD PRECOMPILED PIXEL SHADER
 	ID3DBlob* pixelShaderBlob;
 #ifndef BLINNPHONG
-	#if _DEBUG
-		LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader_d.cso";
+	#ifdef GOURAND
+		#if _DEBUG
+			LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_d.cso";
+		#else
+			LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader.cso";
+		#endif
 	#else
+		#if _DEBUG
+		LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader_d.cso";
+		#else
 		LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader.cso";
+		#endif
 	#endif
 #else
 	#if _DEBUG
-	LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_d.cso";
+	LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_V2_d.cso";
 	#else
 	LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_V2.cso";
 	#endif
 #endif
+
 	res = D3DReadFileToBlob(compiledPixelShaderObject, &pixelShaderBlob);
 	if (FAILED(res))
 	{
@@ -373,7 +390,7 @@ int Lighting::implementedRender(){
 	g_d3dDeviceContext->VSSetConstantBuffers(0, 1, &D11_transformInfo);
 	g_d3dDeviceContext->VSSetConstantBuffers(1, 1, &D11_lightPos);
 
-#ifdef BLINNPHONG
+#if defined(BLINNPHONG) || defined(GOURAND)
 	g_d3dDeviceContext->UpdateSubresource(D11_cameraPos, 0, nullptr, &CameraPos, 0, 0);
 	g_d3dDeviceContext->VSSetConstantBuffers(2, 1, &D11_cameraPos);
 #endif

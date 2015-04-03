@@ -51,7 +51,7 @@ OutVar main(InVar inArg)
 	float cosHN = dot(halfwayVector, worldNormOmogenee);
 	cosHN = max(0, cosHN);
 	
-	float smoothness = 0.8f;
+	float smoothness = 128.0f;
 	float ks = 0.8f;
 
 	cosHN = pow(cosHN, smoothness);

@@ -21,7 +21,7 @@ struct OutVar{
 	float4 forPixelPos: SV_POSITION;
 	float4 lightW: L_W;
 	float4 normalW: N_W;
-	float4 halfwayW: HW_W;
+	float4 viewW: V_W;
 };
 
 OutVar main(InVar inArg)
@@ -45,12 +45,8 @@ OutVar main(InVar inArg)
 	float4 viewVec = cameraPos - worldCoordOmogenee;
 	viewVec = normalize(viewVec);
 
-	// Calculate halfway vector
-	float4 halfwayVector = lightVec + viewVec;
-	halfwayVector = normalize(halfwayVector);
-
 	toPixelShader.normalW = worldNormOmogenee;
-	toPixelShader.halfwayW = halfwayVector;
+	toPixelShader.viewW = viewVec;
 	toPixelShader.lightW = lightVec;
 
 
