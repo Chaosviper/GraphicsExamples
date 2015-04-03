@@ -2,8 +2,9 @@
 #include "BaseWindow.h"
 #include <DirectXMath.h>
 
-#define BLINNPHONG
+//#define BLINNPHONG
 //#define GOURAND
+#define PHONG
 
 class Lighting : public directXHelper::BaseWindow
 {
@@ -36,7 +37,7 @@ class Lighting : public directXHelper::BaseWindow
 
 	ID3D11Buffer* D11_transformInfo;
 	ID3D11Buffer* D11_lightPos;
-#if defined(BLINNPHONG) || defined(GOURAND)
+#if defined(BLINNPHONG) || defined(GOURAND) || defined(PHONG)
 	ID3D11Buffer* D11_cameraPos;
 #endif
 	/*ID3D11Buffer* D11_cameraPos;*/

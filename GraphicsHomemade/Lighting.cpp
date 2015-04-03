@@ -215,7 +215,7 @@ int Lighting::LoadResources(){
 
 
 // ************** SE LO SHADER E' BLINNPHONG o GOURAND => AGGIUNGO ANCHE LA POSIZIONE DELLA CAMERA AI BUFFER DIRECTX **************
-#if defined(BLINNPHONG) || defined(GOURAND)
+#if defined(BLINNPHONG) || defined(GOURAND) || defined(PHONG)
 
 	D3D11_BUFFER_DESC constCameraposBufferDesc;
 	ZeroMemory(&constCameraposBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -240,17 +240,25 @@ int Lighting::LoadResources(){
 
 	ID3DBlob* vertexShaderBlob;
 #ifndef BLINNPHONG
-	#ifdef GOURAND
-		#if _DEBUG
-		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_d.cso";
+	#ifndef PHONG
+		#ifdef GOURAND
+			#if _DEBUG
+			LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader_d.cso";
+			#else
+			LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader.cso";
+			#endif
 		#else
-		LPCWSTR compiledVertexShaderObject = L"BlinnPhongVShader.cso";
+			#if _DEBUG
+			LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader_d.cso";
+			#else
+			LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader.cso";
+			#endif
 		#endif
 	#else
 		#if _DEBUG
-		LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader_d.cso";
+			LPCWSTR compiledVertexShaderObject = L"PhongVShader_d.cso";
 		#else
-		LPCWSTR compiledVertexShaderObject = L"SimpleDiffuseVShader.cso";
+			LPCWSTR compiledVertexShaderObject = L"PhongVShader.cso";
 		#endif
 	#endif
 #else
@@ -290,17 +298,25 @@ int Lighting::LoadResources(){
 	// ** LOAD PRECOMPILED PIXEL SHADER
 	ID3DBlob* pixelShaderBlob;
 #ifndef BLINNPHONG
-	#ifdef GOURAND
-		#if _DEBUG
-			LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_d.cso";
+	#ifndef PHONG
+		#ifdef GOURAND
+			#if _DEBUG
+				LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader_d.cso";
+			#else
+				LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader.cso";
+			#endif
 		#else
-			LPCWSTR compiledPixelShaderObject = L"BlinnPhongPShader.cso";
+			#if _DEBUG
+			LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader_d.cso";
+			#else
+			LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader.cso";
+			#endif
 		#endif
 	#else
 		#if _DEBUG
-		LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader_d.cso";
+			LPCWSTR compiledPixelShaderObject = L"PhongPShader_d.cso";
 		#else
-		LPCWSTR compiledPixelShaderObject = L"SimpleDiffusePShader.cso";
+			LPCWSTR compiledPixelShaderObject = L"PhongPShader.cso";
 		#endif
 	#endif
 #else
@@ -390,7 +406,7 @@ int Lighting::implementedRender(){
 	g_d3dDeviceContext->VSSetConstantBuffers(0, 1, &D11_transformInfo);
 	g_d3dDeviceContext->VSSetConstantBuffers(1, 1, &D11_lightPos);
 
-#if defined(BLINNPHONG) || defined(GOURAND)
+#if defined(BLINNPHONG) || defined(GOURAND) || defined(PHONG)
 	g_d3dDeviceContext->UpdateSubresource(D11_cameraPos, 0, nullptr, &CameraPos, 0, 0);
 	g_d3dDeviceContext->VSSetConstantBuffers(2, 1, &D11_cameraPos);
 #endif

@@ -106,5 +106,11 @@
     <FxCompile Include="BlinnPhongPShader_V2.hlsl">
       <Filter>Shaders\Lighting</Filter>
     </FxCompile>
+    <FxCompile Include="PhongVShader.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongPShader.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
