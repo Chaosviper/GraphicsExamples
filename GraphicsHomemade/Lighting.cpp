@@ -192,7 +192,7 @@ int Lighting::LoadResources(){
 		return -1;
 	}
 
-	XMVECTOR directionalLightPosition = { 0.0f, 2.5f, 0.0f, 1.0f };
+	XMVECTOR directionalLightPosition = { 0.0f, 3.0f, 0.0f, 1.0f };
 
 	// ** BUFFER AGGIUNTIVO PER LIGHT INFO
 	D3D11_BUFFER_DESC constLightBufferDesc;

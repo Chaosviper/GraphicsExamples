@@ -88,5 +88,11 @@
     <FxCompile Include="SimpleDiffusePShader.hlsl">
       <Filter>Shaders\Lighting</Filter>
     </FxCompile>
+    <FxCompile Include="SimpleDiffuseVShader_V2.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
+    <FxCompile Include="SimpleDiffusePShader_V2.hlsl">
+      <Filter>Shaders\Lighting</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

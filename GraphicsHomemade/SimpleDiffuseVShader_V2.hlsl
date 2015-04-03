@@ -15,7 +15,8 @@ cbuffer Lights: register(b1){
 
 struct OutVar{
 	float4 forPixelPos: SV_POSITION;
-	float colorAttenuation: COLOR_ATT;
+	float4 forPixelLightVec: V_LIGHT;
+	float4 forPixelNorm: V_NORM;
 };
 
 OutVar main(InVar inArg)
@@ -32,15 +33,9 @@ OutVar main(InVar inArg)
 	float4 worldNormOmogenee = mul(world, normOmogenee);
 
 	// Calculate light vector (from surface point to lightPoint)
-	float4 lightVec = lightPos - worldCoordOmogenee;
-	lightVec = normalize(lightVec);
-	worldNormOmogenee = normalize(worldNormOmogenee);
-	
-	float cosAlpha = dot(lightVec, worldNormOmogenee);
-	cosAlpha = max(0, cosAlpha);
-	float kd = 0.8f;
+	toPixelShader.forPixelLightVec = lightPos - worldCoordOmogenee; // <-- Will be interpolated in triangle traversal!
 
-	toPixelShader.colorAttenuation = cosAlpha*kd;
+	toPixelShader.forPixelNorm = worldNormOmogenee; // <-- Will be interpolated in triangle traversal!
 
 	return toPixelShader;
 }
